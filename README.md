@@ -8,7 +8,7 @@ I'm a quick solver (I've gotten every one since 2022-01-28 in 5 tries or less so
 
 I've switched the roles, so that YOU get to enter the "correctness" of the word, and the *computer* will guess the next word.
 Basic usage is as follows:
-- Running `python3 guesser.py` will start the game, and the computer will output the first guess (a list of 5 characters)
+- Running `python guesser.py` will start the game, and the computer will output the first guess (a list of 5 characters)
 - You enter a 5-character color string based on whether each character is '-' (not in the list), 'Y' (in the list but not in the correct spot), or 'G' (in the list and in the correct spot).
 - The computer will then generate another guess, and this process repeats until success ('GGGGG') or failure (> 6 attempts).
 *Note that if the computer's guess has two of the same letter, both out of place, only one letter gets a 'Y'.*

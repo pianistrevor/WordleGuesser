@@ -42,24 +42,19 @@ def generate_guess(guess_string, letter_list, solution):
         ints = list(ord(char) - 65 for char in guess_string)
         if (str_array[ints[0]][ints[1]][ints[2]][ints[3]][ints[4]].tolist()) == 1:
             solution.append(guess_string.copy())
-            return
-    i = 0
-    while i < 5:
-        if guess_string[i] != '-':
-            i += 1
-        else:
-            j = 0
-            while j < len(letter_list):
-                if cantbe[i].count(letter_list[j]) > 0:
-                    # This letter can't be here since it must be permuted
-                    j += 1
-                    continue
-                #print("j = {}".format(j))
-                guess_string[i] = letter_list[j] # Most common first
-                generate_guess(guess_string, letter_list, solution)
-                guess_string[i] = '-' # Exhausted recursive guesses
-                j += 1
-            i += 1 # Exhausted solutions
+        return
+    # Search for next blank character
+    i = guess_string.index('-')
+    j = 0
+    while j < len(letter_list):
+        if cantbe[i].count(letter_list[j]) > 0:
+            # This letter can't be here since it must be permuted
+            j += 1
+            continue
+        guess_string[i] = letter_list[j] # Most common first
+        generate_guess(guess_string, letter_list, solution)
+        guess_string[i] = '-' # Exhausted recursive guesses
+        j += 1
 
 ##################
 # Initialization #
@@ -89,12 +84,19 @@ with open('words.txt', 'r') as file:
 ################
 
 while attempts <= 6:
-    str_guess = "".join(guess)
-    print(str_guess)
-    # Remove guess from array
-    str_array[guess_int[0]][guess_int[1]][guess_int[2]][guess_int[3]][guess_int[4]] = 0
-    while len(colorstr) != 5:
+    print("".join(guess))
+    while len(colorstr) != 5 and colorstr != 'r':
         colorstr = input('>> ')
+        if colorstr == 'r':
+            if attempts != 1:
+                # New solution
+                guess = solution_list.pop()
+                guess_int = list(ord(char) - 65 for char in guess)
+                # Remove new guess from solutions
+                str_array[guess_int[0]][guess_int[1]][guess_int[2]][guess_int[3]][guess_int[4]] = 0
+            else:
+                print("You cannot reject the first solution.")
+            colorstr = ''
     if colorstr == 'GGGGG':
         print("Correct! Took {} attempts".format(attempts))
         break
@@ -118,22 +120,15 @@ while attempts <= 6:
     else:
         permstring_list.append(next_guess)
     # Generate solutions
+    solution_list.clear()
     for string in permstring_list:
         generate_guess(string, guess_letters, solution_list)
-    lowest_value = 130 # Lowest value = most common
-    lowest_string = []
-    for string in solution_list:
-        value = 0
-        for val in string:
-            value += string.index(val)
-        if value < lowest_value:
-            lowest_value = value
-            lowest_string = string
-    guess = lowest_string # Set next guess to lowest
+    # Just take the first generated solution - likely close to most common
+    guess = solution_list[0]
+    guess_int = list(ord(char) - 65 for char in guess)
     # Re-initialize
     permute_list.clear()
     permstring_list.clear()
-    solution_list.clear()
     colorstr = ''
     attempts += 1
 

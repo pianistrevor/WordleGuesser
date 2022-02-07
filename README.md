@@ -1,5 +1,5 @@
 # Wordle Guesser
-## Version: 1.1
+Version: 1.1
 
 I've fallen victim to the viral craze of the online game [Wordle](https://www.powerlanguage.co.uk/wordle/).
 It's a game much like Mastermind, but instead of six colors, there's 26 letters.

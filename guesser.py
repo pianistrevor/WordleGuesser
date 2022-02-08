@@ -42,8 +42,7 @@ def fits_template(color_string, guess_tuple, word_tuple):
 # Initialization #
 ##################
 
-#guess = (-1, starting_guesses[randint(0, 4)]) # Unused weight
-guess = (-1, 'TASER')
+guess = (-1, starting_guesses[randint(0, 4)]) # Unused weight
 next_guess = ''
 permute_list = list()           # List of letters to permute
 cantbe = [[], [], [], [], []]   # List of letters at each index that were 'Y'
@@ -64,23 +63,23 @@ heapify(word_list)
 ################
 
 while attempts <= 6:
-    print(guess[1])
     while len(colorstr) != 5 and colorstr != 'r':
-        if len(word_list) == 0:
-            print("We ran out of words? Something went wrong...")
-            sys.exit()
+        print(guess[1])
         colorstr = input('>> ')
-        if colorstr == 'r':
-            if attempts != 1:
-                # New solution
-                guess = heappop(word_list)
-                print(guess[1])
-            else:
-                print("You cannot reject the first solution.")
-            colorstr = ''
     if colorstr == 'GGGGG':
         print("Correct! Took {} attempts".format(attempts))
         break
+    elif len(word_list) == 0:
+        print("We ran out of words? Something went wrong...")
+        break
+    if colorstr == 'r':
+        if attempts != 1:
+            # New solution
+            guess = heappop(word_list)
+        else:
+            print("You cannot reject the first solution.")
+        colorstr = ''
+        continue
     for i, color in enumerate(colorstr):
         # Green: lock it in place (don't change it)
         if color == 'G':
@@ -101,8 +100,11 @@ while attempts <= 6:
             else:
                 cantbe[i].append(guess[1][i])
     # Now eliminate words from heap
-    print(cantbe)
     word_list = filter_heap(word_list, guess, colorstr)
+    # Only pop if there is a solution
+    if len(word_list) == 0:
+        print("We ran out of words? Something went wrong...")
+        break
     guess = heappop(word_list)
     # Re-initialize
     permute_list.clear()

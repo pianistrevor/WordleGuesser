@@ -101,7 +101,6 @@ while attempts <= 6:
             else:
                 cantbe[i].append(guess[1][i])
     # Now eliminate words from heap
-    print(cantbe)
     word_list = filter_heap(word_list, guess, colorstr)
     guess = heappop(word_list)
     # Re-initialize
